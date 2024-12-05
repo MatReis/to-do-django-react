@@ -1,0 +1,31 @@
+version: '3.9'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: django_app
+    ports:
+      - "8000:8000"  # Mapeia a porta 8000 do container para a máquina host
+    volumes:
+      - .:/app  # Permite editar os arquivos localmente e refletir no container
+    depends_on:
+      - db
+    environment:
+      - DEBUG=1  # Variável de ambiente para o Django (pode ser usada no settings.py)
+
+  db:
+    image: postgres:15  # Usa a imagem oficial do PostgreSQL
+    container_name: postgres_db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: todo_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
